@@ -33,10 +33,8 @@ customer_orders as (
 
 customer_payments as (
     select
-
         customer_id,
         sum(amount) as lifetime_value
-
     from order_payments
 
     group by 1
@@ -54,10 +52,12 @@ final as (
         coalesce(customer_orders.number_of_orders, 0) as number_of_orders,
         customer_payments.lifetime_value
 
-    from customers
+    from 
+        customers
+        
+    LEFT JOIN customer_orders USING (customer_id)
+    LEFT JOIN customer_payments USING (customer_id)
 
-    left join customer_orders using (customer_id)
-    left join customer_payments using(customer_id)
 
 )
 
